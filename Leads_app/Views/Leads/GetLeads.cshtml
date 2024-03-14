@@ -1,0 +1,32 @@
+﻿@using Leads_app.Entities
+@model List<Leads>
+
+<form asp-action="GetLeads" method="get">
+    <input type="text" name="search" value="@ViewBag.Search" placeholder="Search">
+    <button type="submit">Search</button>
+</form>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var lead in Model)
+        {
+            <tr>
+                <td>@lead.Id</td>
+                <td>@lead.FirstName</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div>
+    @for (int i = 1; i <= ViewBag.TotalPages; i++)
+    {
+        <a href="@Url.Action("GetLeads", new { search = ViewBag.Search, page = i, pageSize = 20 })">@i</a>
+    }
+</div>
