@@ -1,5 +1,6 @@
 ﻿using Leads_app.Data;
 using Leads_app.Entities;
+using Leads_app.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -87,6 +88,38 @@ namespace Leads_app.Controllers
                 throw new ApplicationException(ex.Message);
             }
             
+        }
+
+        [HttpPost]
+        public void EditLeadWithEmail(EditUser editUser)
+        {
+            try
+            {
+                var leadToUpdate = _context.Leads.FirstOrDefault(u => u.Email == editUser.Email);
+
+                if (leadToUpdate != null)
+                {
+                    leadToUpdate.DateCreated = editUser.DateCreated;
+                    leadToUpdate.DeliveredFrom = editUser.DeliveredFrom;
+                    leadToUpdate.FirstName = editUser.FirstName;
+                    leadToUpdate.LastName = editUser.LastName;
+                    leadToUpdate.PhoneNumber = editUser.PhoneNumber;
+                    leadToUpdate.GeoLocation = editUser.GeoLocation;
+                    leadToUpdate.Session = editUser.Session;
+                    leadToUpdate.Source = editUser.Source;
+                    leadToUpdate.Lander = editUser.Lander;
+                    leadToUpdate.AdditionalInfo = editUser.AdditionalInfo;
+                    leadToUpdate.IPAddress = editUser.IPAddress;
+                    leadToUpdate.StatusId = editUser.StatusId;
+                    leadToUpdate.StatusDateChange = editUser.StatusDateChange;
+
+                    _context.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException(ex.Message);
+            }
         }
     }
 }
