@@ -1,10 +1,12 @@
 ﻿using Leads_app.Data;
 using Leads_app.Entities;
 using Leads_app.Models;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Leads_app.Controllers
@@ -30,9 +32,19 @@ namespace Leads_app.Controllers
             
             try
             {
+
+                string authorizationHeader = Request.Headers["Authorization"].ToString();
+                var token = authorizationHeader[6..];
+                var credentialAsString = Encoding.UTF8.GetString(Convert.FromBase64String(token));
+
+                var credentials = credentialAsString.Split(":");
+
+                var username = credentials[0];
+
                 foreach (var lead in addLeads)
                 {
                     lead.IPAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+                    lead.DeliveredFrom = username;
                     var existingLead = await _context.Leads.FirstOrDefaultAsync(l => l.Email == lead.Email);
 
 
